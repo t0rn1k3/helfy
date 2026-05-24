@@ -20,7 +20,7 @@ A premium full-stack eCommerce application generated end-to-end from an AI Bluep
 ```
 helfy-assignment/
 ├── ai-blueprint/        # The "Engine" — initial.md + guidelines + capabilities
-├── .clinerules          # Hard rules auto-loaded by Cline
+├── .cursorrules         # Hard rules auto-loaded by Cursor
 ├── frontend/            # React + Vite + TypeScript
 ├── backend/             # Express + TypeScript + Drizzle
 ├── database/            # Migrations + seed data

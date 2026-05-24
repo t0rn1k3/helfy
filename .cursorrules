@@ -1,7 +1,40 @@
 # Helfy eCommerce — AI Engineering Rules
 # Cursor reads this file automatically on every request.
-# Canonical long-form rules live in ai-blueprint/guidelines/ and ai-blueprint/capabilities/.
-# This file is a hard-constraint summary — never override these in generated code.
+# Source of truth: ai-blueprint/ (initial.md, guidelines/, capabilities/)
+# This file is the hard-constraint summary — never override these in generated code.
+
+# ============================================================
+# BOOTSTRAP PROTOCOL (READ FIRST)
+# ============================================================
+# Before writing or editing code:
+# 1. Read ai-blueprint/initial.md — current phase and acceptance criteria
+# 2. Read ai-blueprint/guidelines/engineering-guidelines.md
+# 3. Read ai-blueprint/capabilities/capability-definitions.md
+# 4. Inspect the repo — do NOT recreate completed work
+#
+# Completed phases:
+#   Phase 0  — monorepo scaffold (workspaces, docker-compose, .env.example)
+#   Phase 0b — frontend/ (Vite + React 19 + Tailwind v4 + shadcn/ui foundation)
+#   Phase 1a — .cursorrules (this file)
+#
+# Execute phases IN ORDER. Do not skip ahead unless explicitly instructed.
+
+# ============================================================
+# FORBIDDEN — NEVER DO THESE
+# ============================================================
+# - Use Prisma (Drizzle ORM only)
+# - Use bcrypt (argon2 only)
+# - Use Create React App or Next.js (Vite only)
+# - Put application source at repo root
+# - Create separate GitHub repos for frontend/backend
+# - Use `any` type anywhere
+# - Write raw SQL in application code
+# - Duplicate types between frontend and backend (use @helfy/shared)
+# - Store refresh tokens in localStorage (httpOnly cookies only)
+# - Hardcode Tailwind palette colors (bg-slate-900, text-indigo-500, etc.)
+# - Commit .env files or secrets
+# - Use SELECT * or unbounded list queries without pagination
+# - Send stack traces to API clients in production
 
 # ============================================================
 # REPO LAYOUT — MONOREPO (npm workspaces)
@@ -230,7 +263,16 @@ server.ts            ← HTTP server bootstrap (port, signals)
 - ai-blueprint/initial.md is the bootstrap prompt for regenerating the entire project
 - ai-blueprint/guidelines/ contains long-form cross-cutting rules
 - ai-blueprint/capabilities/ contains per-domain building blocks
-- This .cursorrules file is a summary of those documents — ai-blueprint/ is the source of truth
+- This .cursorrules file is the hard-constraint summary — ai-blueprint/ is the source of truth
+- AI tool: Cursor (Agent/Composer) — document all prompts and models in AI-INTERACTIONS.md
+
+## CURSOR EXECUTION RULES
+- Make the smallest correct diff — do not rewrite working modules
+- Match existing code style in the file you edit
+- One logical change per commit
+- After each phase, verify acceptance criteria in initial.md before proceeding
+- If a hand-fix is faster than prompt tuning, fix it and document in README Manual Interventions
+- Update AI-INTERACTIONS.md with prompts, models, and tools used
 
 ## COMMIT STYLE
 feat: add product search with debouncing

@@ -26,7 +26,7 @@ The deliverable is not just the app — it is the **engine** (this blueprint) pl
 
 1. Read [engineering-guidelines.md](./guidelines/engineering-guidelines.md) — architecture, standards, security, UI rules.
 2. Read [capability-definitions.md](./capabilities/capability-definitions.md) — domain building blocks and integration patterns.
-3. Read root [`.cursorrules`](../.cursorrules) — hard constraints summary.
+3. Read root [`.cursorrules`](../.cursorrules) — hard constraints summary (auto-loaded by Cursor).
 4. Inspect existing repo structure — do not recreate what Phase 0 already scaffolded.
 
 **Hard rules:**
@@ -43,7 +43,7 @@ The deliverable is not just the app — it is the **engine** (this blueprint) pl
 ```
 helfy-assignment/
 ├── ai-blueprint/           ← you are here
-├── .cursorrules
+├── .cursorrules            ← hard rules auto-loaded by Cursor
 ├── frontend/               ← React + Vite app
 ├── backend/                ← Express API
 ├── shared/                 ← @helfy/shared types + schemas

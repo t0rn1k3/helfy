@@ -353,7 +353,23 @@ These are problems AI consistently gets wrong. Fix by hand if needed, then log w
 
 ---
 
-## 14. Documentation Deliverables
+## 14. AI Orchestration (Cursor)
+
+This project uses **Cursor** (Agent/Composer) as the AI development tool — not Cline.
+
+| Artifact | Role |
+| -------- | ---- |
+| `.cursorrules` | Hard constraints — auto-loaded by Cursor on every request |
+| `ai-blueprint/initial.md` | Bootstrap prompt — phase-by-phase build plan |
+| `ai-blueprint/guidelines/` | Long-form engineering rules (this file) |
+| `ai-blueprint/capabilities/` | Domain building blocks |
+| `AI-INTERACTIONS.md` | Log of prompts, models, plugins, and search queries |
+
+When regenerating or extending the project, point the Cursor agent at `initial.md` first.
+
+---
+
+## 15. Documentation Deliverables
 
 | File | Purpose |
 | ---- | ------- |
@@ -364,7 +380,7 @@ These are problems AI consistently gets wrong. Fix by hand if needed, then log w
 
 ---
 
-## 15. Performance Budget
+## 16. Performance Budget
 
 - LCP target: < 2.5s on 3G (lazy-load below-fold images)
 - API p95: < 200ms for catalog list (indexed queries)
