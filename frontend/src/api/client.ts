@@ -1,0 +1,75 @@
+import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
+
+import { useAuthStore } from '@/store/auth-store';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:4000/api/v1';
+
+export const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  const token = useAuthStore.getState().accessToken;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+let isRefreshing = false;
+let refreshQueue: Array<(token: string | null) => void> = [];
+
+function processQueue(token: string | null) {
+  refreshQueue.forEach((callback) => callback(token));
+  refreshQueue = [];
+}
+
+apiClient.interceptors.response.use(
+  (response) => response,
+  async (error: AxiosError) => {
+    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+
+    if (error.response?.status !== 401 || originalRequest._retry) {
+      return Promise.reject(error);
+    }
+
+    if (isRefreshing) {
+      return new Promise((resolve, reject) => {
+        refreshQueue.push((token) => {
+          if (!token) {
+            reject(error);
+            return;
+          }
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          resolve(apiClient(originalRequest));
+        });
+      });
+    }
+
+    originalRequest._retry = true;
+    isRefreshing = true;
+
+    try {
+      const { data } = await axios.post<{ data: { accessToken: string } }>(
+        `${API_BASE_URL}/auth/refresh`,
+        {},
+        { withCredentials: true },
+      );
+      const newToken = data.data.accessToken;
+      useAuthStore.getState().setAccessToken(newToken);
+      processQueue(newToken);
+      originalRequest.headers.Authorization = `Bearer ${newToken}`;
+      return apiClient(originalRequest);
+    } catch (refreshError) {
+      processQueue(null);
+      useAuthStore.getState().clearAuth();
+      return Promise.reject(refreshError);
+    } finally {
+      isRefreshing = false;
+    }
+  },
+);
