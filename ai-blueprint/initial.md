@@ -1,8 +1,8 @@
 # Helfy eCommerce — Bootstrap Prompt (initial.md)
 
-> **You are a senior full-stack engineer.** Your job is to build a complete, production-quality
-> eCommerce platform from this repository's AI Blueprint. Read every document in `ai-blueprint/`
-> before writing code. Follow phases in order — do not skip ahead.
+> **You are a senior full-stack engineer working in Cursor.**
+> Build a complete, production-quality eCommerce platform from this repository's AI Blueprint.
+> Read every document in `ai-blueprint/` before writing code. Follow phases in order — do not skip ahead.
 
 ---
 
@@ -17,8 +17,19 @@ Generate a **fully functional premium eCommerce platform** inside this monorepo:
 | Database | MySQL 8 (Docker for local dev) |
 | Shared   | `@helfy/shared` workspace — types + Zod schemas used by FE and BE |
 
-The deliverable is not just the app — it is the **engine** (this blueprint) plus the working code,
-`README.md` (with Manual Interventions), and `AI-INTERACTIONS.md`.
+### Deliverables (graded submission)
+
+| # | Deliverable | Location |
+| - | ----------- | -------- |
+| 1 | Working codebase | `frontend/`, `backend/`, `shared/`, `database/` |
+| 2 | AI Blueprint engine | `ai-blueprint/` + `.cursorrules` |
+| 3 | Manual interventions log | `README.md` § Manual Interventions |
+| 4 | AI interaction log | `AI-INTERACTIONS.md` (prompts, models, tools) |
+
+### AI tool
+
+This project uses **Cursor** (Agent/Composer), not Cline.
+Hard rules auto-load from [`.cursorrules`](../.cursorrules).
 
 ---
 
@@ -26,8 +37,8 @@ The deliverable is not just the app — it is the **engine** (this blueprint) pl
 
 1. Read [engineering-guidelines.md](./guidelines/engineering-guidelines.md) — architecture, standards, security, UI rules.
 2. Read [capability-definitions.md](./capabilities/capability-definitions.md) — domain building blocks and integration patterns.
-3. Read root [`.cursorrules`](../.cursorrules) — hard constraints summary (auto-loaded by Cursor).
-4. Inspect existing repo structure — do not recreate what Phase 0 already scaffolded.
+3. Read [`.cursorrules`](../.cursorrules) — hard constraints summary.
+4. Inspect the repo — **do not recreate completed work** (see §3 Progress).
 
 **Hard rules:**
 - TypeScript strict mode everywhere. No `any`.
@@ -38,19 +49,59 @@ The deliverable is not just the app — it is the **engine** (this blueprint) pl
 
 ---
 
-## 3. Repository Layout (Target State)
+## 3. Progress Tracker
+
+Update this table as phases complete.
+
+| Phase | Name | Status |
+| ----- | ---- | ------ |
+| 0 | Monorepo scaffold | ✅ Done |
+| 0b | Frontend foundation (Vite + shadcn) | ✅ Done |
+| 1a | `.cursorrules` | ✅ Done |
+| 1b | `initial.md` (this file) | ✅ Done |
+| 1c | `engineering-guidelines.md` | ✅ Done |
+| 1d | `capability-definitions.md` | ✅ Done |
+| **1** | **Shared workspace (`@helfy/shared`)** | ⬜ **Next** |
+| 2 | Database schema + migrations + seeds | ⬜ Pending |
+| 3 | Backend auth + middleware | ⬜ Pending |
+| 4 | Backend domain modules | ⬜ Pending |
+| 5 | Frontend data layer (hooks + API modules) | ⬜ Pending |
+| 6 | Frontend pages (full UX) | ⬜ Pending |
+| 7 | Polish + documentation | ⬜ Pending |
+
+### Already built (do not recreate)
+
+**Root:** `package.json` workspaces, `docker-compose.yml`, `.env.example`, `.cursorrules`, `.editorconfig`, Prettier config
+
+**frontend/** (Phase 0b complete):
+- Vite 7 + React 19 + TypeScript + Tailwind v4 + shadcn/ui (new-york, dark theme)
+- Layout: `Header`, `Footer`, `Container`, `PageShell`, `AppLayout`
+- Routes: all pages as placeholders (`HomePage`, `CatalogPage`, `CartPage`, `CheckoutPage`, auth, account, 404)
+- `api/client.ts` with JWT refresh interceptor stub
+- Zustand stores: `authStore`, `cartStore`, `uiStore`
+- TanStack Query + Sonner providers in `AppProviders.tsx`
+- Framer Motion page transitions in `AppLayout`
+
+**Not yet built:** `shared/`, `backend/` (empty), database migrations/seeds
+
+---
+
+## 4. Repository Layout (Target State)
 
 ```
 helfy-assignment/
-├── ai-blueprint/           ← you are here
-├── .cursorrules            ← hard rules auto-loaded by Cursor
-├── frontend/               ← React + Vite app
-├── backend/                ← Express API
-├── shared/                 ← @helfy/shared types + schemas
+├── ai-blueprint/
+│   ├── initial.md                          ← you are here
+│   ├── guidelines/engineering-guidelines.md
+│   └── capabilities/capability-definitions.md
+├── .cursorrules                            ← Cursor hard rules
+├── frontend/                               ← React + Vite (✅ scaffolded)
+├── backend/                                ← Express API (⬜ empty)
+├── shared/                                 ← @helfy/shared (⬜ empty)
 ├── database/
-│   ├── migrations/         ← Drizzle-generated SQL
-│   └── seeds/              ← demo data
-├── docker-compose.yml      ← MySQL 8 + Adminer
+│   ├── migrations/
+│   └── seeds/
+├── docker-compose.yml
 ├── .env.example
 ├── README.md
 └── AI-INTERACTIONS.md
@@ -58,48 +109,45 @@ helfy-assignment/
 
 ---
 
-## 4. Build Phases — Execute In Order
+## 5. Build Phases — Execute In Order
 
-### Phase 0 — Monorepo scaffold ✅ (already done)
+### Phase 0 — Monorepo scaffold ✅
 
 Root workspaces, `docker-compose.yml`, `.env.example`, folder structure exist.
-**Do not delete or relocate** these without explicit instruction.
-
-### Phase 0b — Frontend foundation
-
-**Goal:** Runnable Vite + React 19 + TypeScript app with Tailwind v4 and shadcn/ui.
-
-**Tasks:**
-- Scaffold `frontend/` with Vite React-TS template (if not already present).
-- Install and configure Tailwind v4 (`@tailwindcss/vite`), shadcn/ui (new-york style).
-- Set up path alias `@/*` in `vite.config.ts`, `tsconfig.json`, `tsconfig.app.json`.
-- Create `frontend/src/styles/globals.css` with `@import "tailwindcss"` and shadcn `@theme` tokens (dark premium feel).
-- Add base layout: `Header`, `Footer`, `Container`, `PageShell`.
-- Wire React Router v7 with placeholder routes.
-- Configure Axios client at `frontend/src/api/client.ts` pointing to `VITE_API_BASE_URL`.
-- Add TanStack Query provider, Zustand store stubs, Framer Motion page wrapper.
-
-**Acceptance criteria:**
-- `npm run dev -w frontend` starts on http://localhost:5173
-- shadcn Button/Card render with correct theme tokens
-- No TypeScript or ESLint errors
+**Do not delete or relocate** without explicit instruction.
 
 ---
 
-### Phase 1 — Shared workspace + env wiring
+### Phase 0b — Frontend foundation ✅
+
+Runnable Vite + React 19 + TypeScript app with Tailwind v4 and shadcn/ui.
+
+Verified:
+- `npm run dev -w frontend` → http://localhost:5173
+- `npm run build -w frontend` → succeeds
+- shadcn Button/Card render with dark theme tokens
+
+---
+
+### Phase 1 — Shared workspace + env wiring ⬜ NEXT
 
 **Goal:** End-to-end type safety foundation.
 
 **Tasks:**
 - Create `shared/package.json` with name `@helfy/shared`, build to `dist/`.
-- Add types: `User`, `Product`, `Cart`, `CartItem`, `Order`, `OrderItem`, `Address`, `Category`, `Review`.
-- Add `ApiResponse<T>`, `PaginatedResponse<T>`, `PaginationMeta`, `ErrorCode` constants.
-- Add Zod schemas: `loginSchema`, `signupSchema`, `addressSchema`, `checkoutShippingSchema`.
-- Wire `frontend` and `backend` to depend on `@helfy/shared`.
+- Add types in `shared/src/types/`:
+  - `user.ts`, `product.ts`, `cart.ts`, `order.ts`, `address.ts`, `category.ts`, `review.ts`, `api.ts`
+- Add `ApiResponse<T>`, `PaginatedResponse<T>`, `PaginationMeta`, `ErrorCode` in `api.ts`
+- Add Zod schemas in `shared/src/schemas/`:
+  - `loginSchema`, `signupSchema`, `addressSchema`, `checkoutShippingSchema`, `checkoutPaymentSchema`
+- Export all from `shared/src/index.ts`
+- Wire `frontend` and `backend` package.json to depend on `@helfy/shared`
+- Configure TypeScript project references or workspace imports
 
 **Acceptance criteria:**
-- Both packages import shared types without duplication
-- `npm run build -w shared` succeeds
+- [ ] `npm run build -w shared` succeeds
+- [ ] Frontend imports `{ Product, loginSchema } from '@helfy/shared'` without duplication
+- [ ] Backend can import the same types (once backend exists)
 
 ---
 
@@ -111,37 +159,37 @@ Root workspaces, `docker-compose.yml`, `.env.example`, folder structure exist.
 `users`, `addresses`, `categories`, `products`, `product_images`, `carts`, `cart_items`, `orders`, `order_items`, `product_reviews`, `refresh_tokens`
 
 **Tasks:**
-- Define Drizzle schema in `backend/src/db/schema/` (one file per table group).
-- Configure `drizzle.config.ts` — migrations output to `database/migrations/`.
-- Add FULLTEXT index on `products.name` + `products.description`.
-- Cart must support `user_id` (nullable) AND `session_id` (nullable) for guest carts.
-- Create seeds: 5+ categories, ~30 products with image URLs (Picsum/Unsplash), demo customer + admin user.
-- Scripts: `db:generate`, `db:migrate`, `db:seed`, `db:studio` in backend package.json.
+- Define Drizzle schema in `backend/src/db/schema/` (one file per table group)
+- Configure `drizzle.config.ts` — migrations output to `database/migrations/`
+- FULLTEXT index on `products.name` + `products.description`
+- Cart: `user_id` (nullable) AND `session_id` (nullable) for guest carts
+- Seeds: 5+ categories, ~30 products (Picsum URLs), demo customer + admin user
+- Scripts: `db:generate`, `db:migrate`, `db:seed`, `db:studio` in backend `package.json`
 
 **Acceptance criteria:**
-- `npm run db:up && npm run db:migrate && npm run db:seed` completes without error
-- Adminer at http://localhost:8080 shows populated tables
+- [ ] `npm run db:up && npm run db:migrate && npm run db:seed` completes without error
+- [ ] Adminer at http://localhost:8080 shows populated tables
 
 ---
 
 ### Phase 3 — Backend auth + global middleware
 
-**Goal:** Secure, production-pattern auth layer.
+**Goal:** Secure auth layer with JWT refresh rotation.
 
 **Tasks:**
-- `backend/src/config/env.ts` — Zod-validated env, fail fast on missing vars.
-- `AppError`, `asyncHandler`, `logger` (pino), JWT utils.
-- Middleware: `error.middleware`, `validate.middleware`, `auth.middleware`, rate limiters.
-- Auth module: register, login, refresh (with **token rotation**), logout, logout-all.
-- argon2 password hashing; refresh tokens stored hashed in `refresh_tokens` table.
-- Access token returned in JSON body; refresh token in httpOnly cookie.
+- `backend/src/config/env.ts` — Zod-validated env, fail fast on startup
+- `AppError`, `asyncHandler`, `logger` (pino), JWT utils
+- Middleware: error, validate, auth, rate limiters
+- Auth module: register, login, refresh (**token rotation**), logout, logout-all
+- argon2 hashing; refresh tokens hashed in `refresh_tokens` table
+- Access token in JSON body; refresh token in httpOnly cookie
 
 **Acceptance criteria:**
-- Register → login → access protected route → refresh → logout flow works via curl/Postman
-- Invalid/expired refresh token returns 401
-- Auth routes rate-limited to 10 req / 15 min
+- [ ] Register → login → protected route → refresh → logout works via curl/Postman
+- [ ] Invalid refresh token returns 401
+- [ ] Auth routes rate-limited to 10 req / 15 min
 
-**Known AI-Gap:** Refresh rotation race on parallel tabs — implement DB-level token family invalidation, document fix in README if hand-tuned.
+**Known AI-Gap:** Refresh rotation race on parallel tabs — use token family invalidation; log hand-fix in README.
 
 ---
 
@@ -151,51 +199,43 @@ Root workspaces, `docker-compose.yml`, `.env.example`, folder structure exist.
 
 **Modules:** `users`, `products`, `categories`, `cart`, `orders`, `reviews`
 
-Each module follows:
+Each module:
 ```
 modules/{domain}/
-  routes.ts       ← thin Express router
-  controller.ts   ← req/res only, no business logic
-  service.ts      ← all business logic
-  repository.ts   ← Drizzle queries only
-  validators.ts   ← Zod schemas (import shared where possible)
-  types.ts        ← module-local types only
+  routes.ts, controller.ts, service.ts, repository.ts, validators.ts, types.ts
 ```
 
-**Key endpoints (prefix `/api/v1`):**
+**Key endpoints (`/api/v1`):**
 
-| Domain     | Endpoints |
-| ---------- | --------- |
-| Products   | `GET /products` (search, filter, sort, paginate), `GET /products/:slug` |
+| Domain | Endpoints |
+| ------ | --------- |
+| Products | `GET /products`, `GET /products/:slug` |
 | Categories | `GET /categories` |
-| Cart       | `GET /cart`, `POST /cart/items`, `PATCH /cart/items/:id`, `DELETE /cart/items/:id`, `POST /cart/merge` |
-| Orders     | `POST /orders`, `GET /orders`, `GET /orders/:id` |
-| Users      | `GET /me`, `PATCH /me`, `GET /me/addresses`, `POST /me/addresses`, `PATCH /me/addresses/:id`, `DELETE /me/addresses/:id` |
-| Reviews    | `GET /products/:slug/reviews`, `POST /products/:slug/reviews` |
+| Cart | `GET /cart`, `POST /cart/items`, `PATCH /cart/items/:id`, `DELETE /cart/items/:id`, `POST /cart/merge` |
+| Orders | `POST /orders`, `GET /orders`, `GET /orders/:id` |
+| Users | `GET /me`, `PATCH /me`, addresses CRUD |
+| Reviews | `GET /products/:slug/reviews`, `POST /products/:slug/reviews` |
 
 **Acceptance criteria:**
-- All endpoints return standard envelope
-- Catalog search uses FULLTEXT; filters are query-param driven
-- Guest cart works with `X-Session-Id` header or cookie
-- Cart merge on login dedupes by `product_id`, sums quantities
+- [ ] All endpoints return standard envelope
+- [ ] Guest cart via `X-Session-Id` header
+- [ ] Cart merge dedupes by `product_id`, sums quantities
 
 ---
 
-### Phase 5 — Frontend foundation (data layer + routing)
+### Phase 5 — Frontend data layer
 
-**Goal:** Connected frontend shell ready for pages.
+**Goal:** Connect frontend to backend API.
 
 **Tasks:**
-- Complete Zustand stores: `authStore`, `cartStore`, `uiStore`.
-- TanStack Query hooks: `useProducts`, `useProduct`, `useCart`, `useOrders`, `useAuth`.
-- API modules: `auth.api.ts`, `products.api.ts`, `cart.api.ts`, `orders.api.ts`.
-- Axios interceptor: attach access token, silent refresh on 401, redirect to login on refresh failure.
-- `ProtectedRoute` component; route config for all pages (placeholders OK initially).
-- Toast provider (shadcn Sonner) for API errors.
+- API modules: `auth.api.ts`, `products.api.ts`, `cart.api.ts`, `orders.api.ts`
+- TanStack Query hooks: `useAuth`, `useProducts`, `useProduct`, `useCart`, `useOrders`
+- Wire login/logout to `authStore`; cart merge on login success
+- Toast on API errors via Sonner
 
 **Acceptance criteria:**
-- Login stores access token; protected routes redirect when logged out
-- API errors show toast, not uncaught promise rejections
+- [ ] Login stores access token; protected routes redirect when logged out
+- [ ] API errors show toast, not uncaught rejections
 
 ---
 
@@ -203,34 +243,20 @@ modules/{domain}/
 
 **Goal:** Complete premium shopping experience.
 
-**Pages to build:**
-
 | Route | Page |
 | ----- | ---- |
-| `/` | HomePage — hero, featured products, categories |
-| `/catalog` | CatalogPage — search, filters, sort, pagination (URL state) |
-| `/products/:slug` | ProductDetailPage — gallery, reviews, add to cart |
-| `/cart` | CartPage — line items, quantity controls |
-| `/checkout` | CheckoutPage — 4-step stepper |
-| `/login`, `/signup` | Auth pages |
-| `/account` | AccountLayout with nested routes |
-| `/account/profile` | ProfilePage |
-| `/account/addresses` | AddressesPage |
-| `/account/orders` | OrdersPage |
-| `/account/orders/:id` | OrderDetailPage |
-| `*` | NotFoundPage |
-
-**UX requirements:**
-- Skeleton loaders on all async sections
-- Empty states with helpful CTA
-- Mobile-first responsive layout
-- Framer Motion on route transitions and add-to-cart feedback
-- shadcn components only — no raw HTML form controls
+| `/` | HomePage — hero, featured products |
+| `/catalog` | Search, filters, sort, pagination (URL state) |
+| `/products/:slug` | Gallery, reviews, add to cart |
+| `/cart` | Line items, quantity controls |
+| `/checkout` | 4-step stepper |
+| `/login`, `/signup` | Auth forms |
+| `/account/*` | Profile, addresses, orders, order detail |
 
 **Acceptance criteria:**
-- Full user journey: browse → add to cart → checkout → view order history
-- Guest can shop; cart merges on login
-- All filters persist in URL
+- [ ] Full journey: browse → cart → checkout → order history
+- [ ] Guest cart merges on login
+- [ ] Filters persist in URL
 
 ---
 
@@ -240,48 +266,60 @@ modules/{domain}/
 
 **Tasks:**
 - Error boundaries on every page
-- 404 page, loading fallbacks, optimistic cart with rollback
-- Finalize `README.md`: quick-start, env vars, demo credentials, **Manual Interventions** section
-- Create `AI-INTERACTIONS.md`: every prompt, model used, tools, search queries
-- Run `npm run lint`, `npm run build`, fix all errors
-- Optional: admin product CRUD (stretch — only after core features pass)
+- Optimistic cart with rollback
+- Finalize `README.md` with **Manual Interventions**
+- Create `AI-INTERACTIONS.md` — every prompt, Cursor model, tools used
+- `npm run lint && npm run build` — zero errors
 
 **Acceptance criteria:**
-- `npm run build` succeeds for all workspaces
-- README documents every hand-fix and why AI couldn't handle it
-- App runs end-to-end with `npm run db:up && npm run dev`
+- [ ] `npm run build` succeeds for all workspaces
+- [ ] End-to-end demo works with `npm run db:up && npm run dev`
 
 ---
 
-## 5. Definition of Done (Whole Project)
+## 6. Definition of Done (Whole Project)
 
-- [ ] All Phase 0b–7 acceptance criteria pass
+- [ ] All build phase acceptance criteria pass (Phase 1–7)
 - [ ] No `any` types in codebase
 - [ ] No secrets committed
 - [ ] `.env.example` matches all env vars in use
-- [ ] Demo user can complete full purchase flow
+- [ ] Demo user completes full purchase flow
 - [ ] Manual Interventions documented in README.md
-- [ ] AI-INTERACTIONS.md complete
+- [ ] AI-INTERACTIONS.md complete (Cursor prompts + models)
 
 ---
 
-## 6. Out of Scope (Document, Do Not Build)
+## 7. Out of Scope
 
 | Item | Approach |
 | ---- | -------- |
-| Live Stripe payments | Mock `PaymentService`; document Stripe plug-in point |
-| Real email (SMTP/Resend) | Log to pino instead |
-| S3/Cloudinary images | Use Picsum/Unsplash URLs in seeds |
-| Multi-currency / i18n | Hard-code USD |
-| Admin panel | Optional stretch goal only |
+| Live Stripe | Mock `PaymentService`; document plug-in point |
+| Real email | Log to pino |
+| S3/Cloudinary | Picsum/Unsplash URLs in seeds |
+| Multi-currency | Hard-code USD |
+| Admin panel | Optional stretch goal after core features |
 
 ---
 
-## 7. When Stuck
+## 8. When Stuck
 
-1. Re-read [engineering-guidelines.md](./guidelines/engineering-guidelines.md) for the rule you may be violating.
-2. Re-read the relevant capability section in [capability-definitions.md](./capabilities/capability-definitions.md).
-3. Prefer fixing the smallest correct diff — do not rewrite working modules.
-4. If an AI-Gap is hit (see engineering-guidelines.md § AI-Gaps), fix by hand and log it in README.md Manual Interventions.
+1. Re-read [engineering-guidelines.md](./guidelines/engineering-guidelines.md).
+2. Re-read the relevant section in [capability-definitions.md](./capabilities/capability-definitions.md).
+3. Make the smallest correct diff — do not rewrite working modules.
+4. AI-Gap? Fix by hand, log in README Manual Interventions, note in AI-INTERACTIONS.md.
 
-**Start with Phase 0b unless the frontend workspace is already fully scaffolded.**
+---
+
+## 9. Quick Commands
+
+```bash
+npm install                  # install all workspaces
+npm run dev -w frontend      # frontend only → :5173
+npm run dev                  # frontend + backend (once backend exists)
+npm run db:up                # start MySQL + Adminer
+npm run db:migrate           # apply migrations (Phase 2+)
+npm run db:seed              # seed demo data (Phase 2+)
+npm run build                # build shared → backend → frontend
+```
+
+**Start with Phase 1 (shared workspace) unless explicitly instructed otherwise.**
