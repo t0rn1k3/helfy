@@ -1,70 +1,105 @@
-# Getting Started with Create React App
+# Helfy — AI-Blueprint-Driven eCommerce Platform
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A premium full-stack eCommerce application generated end-to-end from an AI Blueprint
+(`ai-blueprint/`). Single GitHub repo, monorepo via npm workspaces.
 
-## Available Scripts
+> Note: This README is a Phase 0 skeleton. The final version (with Manual
+> Interventions log) is written in Phase 7 of the build.
 
-In the project directory, you can run:
+## Stack
 
-### `npm start`
+| Layer    | Technologies                                                                                  |
+| -------- | --------------------------------------------------------------------------------------------- |
+| Frontend | React 19, Vite 6, TypeScript, Tailwind v4, shadcn/ui, Framer Motion, React Router, TanStack Query, Zustand |
+| Backend  | Node 20, Express 4, TypeScript, Drizzle ORM, mysql2, JWT, argon2, Zod, pino                  |
+| Database | MySQL 8 (Docker for local dev)                                                                |
+| Tooling  | npm workspaces, Prettier, ESLint, Husky + lint-staged                                         |
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Repo Layout
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```
+helfy-assignment/
+├── ai-blueprint/        # The "Engine" — initial.md + guidelines + capabilities
+├── .clinerules          # Hard rules auto-loaded by Cline
+├── frontend/            # React + Vite + TypeScript
+├── backend/             # Express + TypeScript + Drizzle
+├── database/            # Migrations + seed data
+├── shared/              # End-to-end TypeScript types + Zod schemas
+├── docker-compose.yml   # MySQL 8 + Adminer
+├── README.md            # This file
+└── AI-INTERACTIONS.md   # Prompts, models, and tools log
+```
 
-### `npm test`
+## Quick Start
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Prerequisites
 
-### `npm run build`
+- Node.js >= 20
+- npm >= 10
+- Docker Desktop (for MySQL)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Setup
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+git clone <repo-url> helfy
+cd helfy
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+cp .env.example .env
+cp .env.example backend/.env
+cp .env.example frontend/.env
 
-### `npm run eject`
+npm install
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+npm run db:up
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+npm run db:migrate
+npm run db:seed
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+npm run dev
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Open:
 
-## Learn More
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:4000/api/v1
+- Adminer (DB UI): http://localhost:8080
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Demo Credentials
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Populated by `npm run db:seed`. See `database/seeds/users.seed.ts` for the
+generated accounts (a customer and an admin user).
 
-### Code Splitting
+## Available Scripts (root)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+| Command                | Description                                      |
+| ---------------------- | ------------------------------------------------ |
+| `npm run dev`          | Start backend + frontend in parallel             |
+| `npm run dev:frontend` | Start only the frontend                          |
+| `npm run dev:backend`  | Start only the backend                           |
+| `npm run build`        | Build all workspaces (shared → backend → frontend) |
+| `npm run db:up`        | Start MySQL + Adminer in Docker                  |
+| `npm run db:down`      | Stop the local DB                                |
+| `npm run db:migrate`   | Apply Drizzle migrations                         |
+| `npm run db:seed`      | Insert seed data                                 |
+| `npm run db:studio`    | Open Drizzle Studio                              |
+| `npm run lint`         | Run ESLint across workspaces                     |
+| `npm run format`       | Format with Prettier                             |
+| `npm run test`         | Run all workspace tests                          |
 
-### Analyzing the Bundle Size
+## AI Blueprint
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+The complete AI engine lives in `ai-blueprint/`. To regenerate the project from
+scratch, point an agent at [`ai-blueprint/initial.md`](./ai-blueprint/initial.md)
+and let it execute the phases.
 
-### Making a Progressive Web App
+See [`AI-INTERACTIONS.md`](./AI-INTERACTIONS.md) for the prompts, models, and
+tools used during this build.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Manual Interventions
 
-### Advanced Configuration
+_To be filled in during Phase 7. This section will document every fix that was
+faster to do by hand than to prompt for, and explain why._
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## License
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Private — assignment submission.
