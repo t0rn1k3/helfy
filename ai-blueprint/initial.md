@@ -35,7 +35,7 @@ Hard rules auto-load from [`.cursorrules`](../.cursorrules).
 
 ## 2. Before You Write Any Code
 
-1. Read [engineering-guidelines.md](./guidelines/engineering-guidelines.md) — architecture, standards, security, UI rules.
+1. Read [engineering-guidelines.md](./guidelines/engineering-guidelines.md) — index to all guideline files (01–06).
 2. Read [capability-definitions.md](./capabilities/capability-definitions.md) — domain building blocks and integration patterns.
 3. Read [`.cursorrules`](../.cursorrules) — hard constraints summary.
 4. Inspect the repo — **do not recreate completed work** (see §3 Progress).
@@ -59,7 +59,7 @@ Update this table as phases complete.
 | 0b | Frontend foundation (Vite + shadcn) | ✅ Done |
 | 1a | `.cursorrules` | ✅ Done |
 | 1b | `initial.md` (this file) | ✅ Done |
-| 1c | `engineering-guidelines.md` | ✅ Done |
+| 1c | `engineering-guidelines/` (01–06) | ✅ Done |
 | 1d | `capability-definitions.md` | ✅ Done |
 | **1** | **Shared workspace (`@helfy/shared`)** | ⬜ **Next** |
 | 2 | Database schema + migrations + seeds | ⬜ Pending |
@@ -92,7 +92,14 @@ Update this table as phases complete.
 helfy-assignment/
 ├── ai-blueprint/
 │   ├── initial.md                          ← you are here
-│   ├── guidelines/engineering-guidelines.md
+│   ├── guidelines/
+│   │   ├── engineering-guidelines.md   ← index
+│   │   ├── 01-architecture.md
+│   │   ├── 02-coding-standards.md
+│   │   ├── 03-error-handling.md
+│   │   ├── 04-security.md
+│   │   ├── 05-ui-design-system.md
+│   │   └── 06-testing.md
 │   └── capabilities/capability-definitions.md
 ├── .cursorrules                            ← Cursor hard rules
 ├── frontend/                               ← React + Vite (✅ scaffolded)
