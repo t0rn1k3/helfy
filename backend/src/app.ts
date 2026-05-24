@@ -8,6 +8,10 @@ import { env } from './config/env.js';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware.js';
 import { generalRateLimiter } from './middleware/rateLimit.middleware.js';
 import { authRoutes } from './modules/auth/routes.js';
+import { cartRoutes } from './modules/cart/routes.js';
+import { categoriesRoutes } from './modules/categories/routes.js';
+import { ordersRoutes } from './modules/orders/routes.js';
+import { productsRoutes } from './modules/products/routes.js';
 import { usersRoutes } from './modules/users/routes.js';
 import { ok } from './utils/response.js';
 import { logger } from './utils/logger.js';
@@ -31,6 +35,10 @@ export function createApp() {
 
   apiRouter.get('/health', (_req, res) => ok(res, { status: 'ok' }));
   apiRouter.use('/auth', authRoutes);
+  apiRouter.use('/categories', categoriesRoutes);
+  apiRouter.use('/products', productsRoutes);
+  apiRouter.use('/cart', cartRoutes);
+  apiRouter.use('/orders', ordersRoutes);
   apiRouter.use(usersRoutes);
 
   app.use(env.API_PREFIX, apiRouter);

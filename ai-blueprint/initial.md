@@ -64,7 +64,7 @@ Update this table as phases complete.
 | **2** | **Database schema + migrations + seeds** | ✅ Done |
 | **1** | **Shared workspace (`@helfy/shared`)** | ✅ Done |
 | 3 | Backend auth + middleware | ✅ Done |
-| 4 | Backend domain modules | ⬜ Pending |
+| 4 | Backend domain modules | ✅ Done |
 | 5 | Frontend data layer (hooks + API modules) | ⬜ Pending |
 | 6 | Frontend pages (full UX) | ⬜ Pending |
 | 7 | Polish + documentation | ⬜ Pending |
@@ -84,7 +84,9 @@ Update this table as phases complete.
 
 **Phase 3 complete:** Express server, JWT auth (register/login/refresh/logout/logout-all), middleware stack, `GET /me` protected route
 
-**Not yet built:** Domain REST modules (Phase 4+)
+**Phase 4 complete:** Full REST API — products, categories, cart, orders, reviews, user profile + addresses
+
+**Not yet built:** Frontend API integration (Phase 5+)
 
 **Phase 1 complete:** `@helfy/shared` — domain types, API envelope types, Zod schemas; wired into `frontend` and `backend`
 
@@ -214,7 +216,7 @@ Verified:
 
 ---
 
-### Phase 4 — Backend domain modules
+### Phase 4 — Backend domain modules ✅
 
 **Goal:** Full REST API for eCommerce domains.
 
@@ -238,9 +240,9 @@ modules/{domain}/
 | Reviews | `GET /products/:slug/reviews`, `POST /products/:slug/reviews` |
 
 **Acceptance criteria:**
-- [ ] All endpoints return standard envelope
-- [ ] Guest cart via `X-Session-Id` header
-- [ ] Cart merge dedupes by `product_id`, sums quantities
+- [x] All endpoints return standard envelope
+- [x] Guest cart via `X-Session-Id` header
+- [x] Cart merge dedupes by `product_id`, sums quantities
 
 ---
 
