@@ -66,8 +66,12 @@ Open:
 
 ### Demo Credentials
 
-Populated by `npm run db:seed`. See `database/seeds/users.seed.ts` for the
-generated accounts (a customer and an admin user).
+Populated by `npm run db:seed`. Demo accounts:
+
+| Email | Password | Role |
+| ----- | -------- | ---- |
+| customer@helfy.dev | password123 | customer |
+| admin@helfy.dev | password123 | admin |
 
 ## Available Scripts (root)
 

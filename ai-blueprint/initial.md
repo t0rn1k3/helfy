@@ -61,8 +61,8 @@ Update this table as phases complete.
 | 1b | `initial.md` (this file) | ✅ Done |
 | 1c | `engineering-guidelines/` (01–06) | ✅ Done |
 | 1d | `capabilities/` (7 domain files) | ✅ Done |
-| **1** | **Shared workspace (`@helfy/shared`)** | ⬜ **Next** |
-| 2 | Database schema + migrations + seeds | ⬜ Pending |
+| **2** | **Database schema + migrations + seeds** | ✅ Done |
+| **1** | **Shared workspace (`@helfy/shared`)** | ⬜ Pending |
 | 3 | Backend auth + middleware | ⬜ Pending |
 | 4 | Backend domain modules | ⬜ Pending |
 | 5 | Frontend data layer (hooks + API modules) | ⬜ Pending |
@@ -82,7 +82,9 @@ Update this table as phases complete.
 - TanStack Query + Sonner providers in `AppProviders.tsx`
 - Framer Motion page transitions in `AppLayout`
 
-**Not yet built:** `shared/`, `backend/` (empty), database migrations/seeds
+**Not yet built:** `shared/` (empty), Express API modules (Phase 3+)
+
+**Phase 2 complete:** Drizzle schema (11 tables), migrations, seeds, backend/db tooling
 
 ---
 
