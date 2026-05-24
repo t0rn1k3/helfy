@@ -18,7 +18,17 @@ export function validate(schema: ZodTypeAny, source: RequestSource = 'body') {
       return;
     }
 
-    req[source] = result.data;
+    if (source === 'body') {
+      req.body = result.data;
+    } else {
+      Object.defineProperty(req, source, {
+        value: result.data,
+        writable: true,
+        configurable: true,
+        enumerable: true,
+      });
+    }
+
     next();
   };
 }
