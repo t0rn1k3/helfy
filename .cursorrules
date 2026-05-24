@@ -1,0 +1,246 @@
+# Helfy eCommerce — AI Engineering Rules
+# Cursor reads this file automatically on every request.
+# Canonical long-form rules live in ai-blueprint/guidelines/ and ai-blueprint/capabilities/.
+# This file is a hard-constraint summary — never override these in generated code.
+
+# ============================================================
+# REPO LAYOUT — MONOREPO (npm workspaces)
+# ============================================================
+# Root
+#   frontend/    React app (Vite)
+#   backend/     Express API
+#   shared/      End-to-end TypeScript types + Zod schemas
+#   database/    migrations/ + seeds/ (Drizzle-generated SQL)
+#   ai-blueprint/ initial.md + guidelines/ + capabilities/
+# NEVER put app code at the repo root.
+# NEVER create a separate repo for frontend or backend.
+
+## STACK (NON-NEGOTIABLE)
+
+### Frontend
+- Runtime: React 19 + Vite 6 + TypeScript 5 (strict)
+- Styling: Tailwind CSS v4 + shadcn/ui (new-york style) — use shadcn CSS variables for all colors, NEVER hardcode hex or Tailwind palette colors directly
+- Animation: Framer Motion
+- Icons: Lucide React
+- Routing: React Router v7
+- State: Zustand (authStore, cartStore, uiStore)
+- Server state / caching: TanStack Query v5
+- Forms: React Hook Form + Zod
+- HTTP client: Axios (configured instance at frontend/src/api/client.ts)
+- Shared types: imported from `shared` workspace, NOT re-declared in frontend
+
+### Backend
+- Runtime: Node 20 LTS + Express 4 + TypeScript 5 (strict)
+- ORM: Drizzle ORM (mysql2 driver) — schema files in backend/src/db/schema/
+- Migrations: Drizzle Kit — output to database/migrations/
+- Database: MySQL 8 (local dev via Docker, see docker-compose.yml)
+- Auth: JWT — access token (15m, in-memory) + refresh token (7d, httpOnly cookie)
+- Password hashing: argon2 (NOT bcrypt)
+- Validation: Zod (every route input validated before controller)
+- Logger: pino
+- Security: helmet, cors (whitelist), express-rate-limit
+- Env validation: Zod schema in backend/src/config/env.ts — fail fast on startup if vars missing
+- Shared types: imported from `shared` workspace
+
+### Shared workspace (shared/src/)
+- All TypeScript interfaces and Zod schemas that are used by BOTH frontend and backend live here
+- Frontend and backend import from `@helfy/shared`
+- Never duplicate type definitions between packages
+
+### Database
+- Engine: MySQL 8 with utf8mb4_unicode_ci
+- ORM: Drizzle — define schema in backend/src/db/schema/, generate migrations with `npm run db:generate`, apply with `npm run db:migrate`
+- Seeds: database/seeds/*.seed.ts — run with `npm run db:seed`
+- NEVER write raw SQL in application code — use Drizzle query builder
+- NEVER use SELECT * — always select only needed columns
+
+### Testing
+- Frontend: Vitest + Testing Library
+- Backend: Vitest + supertest
+- Tests live alongside source in __tests__/ or *.test.ts files
+
+## FOLDER STRUCTURE — ALWAYS FOLLOW THIS
+
+### Frontend (frontend/src/)
+```
+api/
+  client.ts          ← Axios instance (base URL, interceptors, token refresh)
+  auth.api.ts
+  products.api.ts
+  cart.api.ts
+  orders.api.ts
+components/
+  ui/                ← shadcn primitives only (button, card, dialog, input…)
+  layout/            ← Header, Footer, MobileNav, Container, PageShell
+  features/          ← ProductCard, CartLine, CheckoutStepper, OrderTimeline…
+hooks/               ← useAuth, useCart, useDebounce, useMediaQuery
+store/               ← Zustand stores (authStore.ts, cartStore.ts, uiStore.ts)
+pages/               ← route-level components (one file per route)
+routes/              ← route definitions, ProtectedRoute, router config
+lib/                 ← cn(), formatPrice(), motion variants, validators
+styles/              ← globals.css (Tailwind v4 @import + @theme tokens)
+types/               ← frontend-only types (not shared with backend)
+```
+
+### Backend (backend/src/)
+```
+modules/             ← domain-driven, one folder per bounded context
+  auth/              ← routes.ts, controller.ts, service.ts, repository.ts, validators.ts, types.ts
+  users/
+  products/
+  categories/
+  cart/
+  orders/
+  reviews/
+db/
+  client.ts          ← Drizzle client + mysql2 connection pool
+  schema/            ← users.ts, products.ts, orders.ts … (one file per table group)
+middleware/          ← auth.middleware.ts, error.middleware.ts, validate.middleware.ts, rateLimit.ts
+config/              ← env.ts (Zod-validated), constants.ts
+utils/               ← AppError.ts, asyncHandler.ts, jwt.ts, logger.ts
+types/               ← express.d.ts (req.user augmentation)
+app.ts               ← Express app composition (middleware + routes)
+server.ts            ← HTTP server bootstrap (port, signals)
+```
+
+## CODING STANDARDS
+
+### TypeScript
+- Strict mode ON (`"strict": true` in tsconfig) for ALL packages
+- No `any` — use `unknown` and narrow with type guards or Zod `.parse()`
+- Prefer `as const` objects over TypeScript enums for shared FE/BE constants
+- Use TypeScript enums only when required by a library
+- All API responses must match the typed response envelope (see below)
+- Import shared types from `@helfy/shared`, never re-declare them
+
+### Naming Conventions
+- React components / pages: PascalCase (`ProductCard.tsx`, `CatalogPage.tsx`)
+- All other files: kebab-case (`auth.service.ts`, `use-cart.ts`, `api-contracts.md`)
+- Variables / functions: camelCase
+- Constants: SCREAMING_SNAKE_CASE
+- DB tables / columns: snake_case (Drizzle handles TS mapping with `casing: 'camelCase'`)
+- Env vars: SCREAMING_SNAKE_CASE (`JWT_ACCESS_SECRET`, `DATABASE_HOST`)
+- Zod schemas: suffixed with `Schema` (`loginSchema`, `productSchema`)
+
+### Error Handling
+- Backend: all errors go through centralized `error.middleware.ts` — NEVER send stack traces to client in production
+- All async route handlers wrapped with `asyncHandler` utility — no try/catch boilerplate in controllers
+- Use `AppError` class (extends Error) with `statusCode` and `code` fields
+- Frontend: React Error Boundaries on every page, toast notifications for API errors
+- HTTP status codes: 400 validation, 401 unauthenticated, 403 forbidden, 404 not found, 409 conflict, 422 unprocessable, 500 server error
+
+### API Response Envelope (ALWAYS use this shape)
+```typescript
+// Success
+{ success: true, data: T, message?: string }
+
+// Error
+{ success: false, error: string, code: string, details?: unknown }
+
+// Paginated list
+{ success: true, data: T[], pagination: { page: number, limit: number, total: number, totalPages: number } }
+```
+
+### Security Rules
+- Passwords: argon2 hashing (NOT bcrypt, NOT SHA)
+- JWT secrets: minimum 64 characters, validated at startup by env.ts
+- All inputs validated with Zod before reaching controller — use `validate.middleware.ts`
+- ORM only — NEVER raw SQL in application code
+- CORS: whitelist `CORS_ORIGINS` env var only
+- Auth rate limit: 10 requests per 15 min window on /auth routes
+- General rate limit: 100 requests per 15 min window on all routes
+- httpOnly + Secure cookies for refresh tokens in production (`COOKIE_SECURE=true`)
+
+### Performance
+- Images: always specify width + height attributes, use `loading="lazy"` outside viewport
+- Lists: always paginate, default limit 20, max 100
+- Drizzle queries: always select only needed columns — never `.select()` with no fields specified
+- MySQL FULLTEXT index on product name + description for catalog search
+- Debounce search inputs at 300ms
+
+## UI/UX RULES
+- Color: use shadcn CSS custom properties (`bg-background`, `text-foreground`, `text-primary`, etc.) — NEVER raw Tailwind palette colors like `bg-slate-900` or `text-indigo-500`
+- Dark premium feel is achieved via the shadcn `@theme` token overrides in globals.css, not inline classes
+- Every interactive element must have visible hover + focus-visible states
+- Loading states: skeleton screens (not spinner-only)
+- Empty states: helpful message + action button — never a blank white box
+- Mobile-first responsive: design for 375px first, then scale up
+- Smooth page transitions: Framer Motion `AnimatePresence` on route changes
+- Framer Motion variants: define in `lib/motion.ts`, import — never inline animation objects
+
+## FEATURE SCOPE — NEVER SKIP THESE
+
+### Authentication
+- Email + password signup / login
+- JWT access token (15m, stored in memory / TanStack Query cache)
+- Refresh token (7d, httpOnly cookie)
+- Refresh token rotation on every use (old token invalidated immediately)
+- Logout: clear cookie + invalidate refresh token in DB
+- Logout-all-devices: invalidate all refresh tokens for user
+- Protected routes: redirect to login if no valid token
+
+### Product Catalog
+- Full-text search (MySQL FULLTEXT on name + description)
+- Filter by category, price range, brand, min rating
+- Sort by price asc/desc, newest, popularity
+- Pagination (20 per page default)
+- URL-driven filter/sort state (query params) — filters survive page refresh
+- Debounced search input (300ms)
+
+### Product Detail Page
+- Image gallery with thumbnail navigation
+- Size / color variant stubs (structure only, no inventory tracking)
+- Customer reviews (create, list)
+- Related products section
+- Add to cart with Framer Motion feedback
+
+### Cart
+- Persistent for authenticated users (stored in DB, `carts` + `cart_items`)
+- Guest cart: `session_id` (UUID) in localStorage + `cart_items` keyed to session
+- Merge on login: dedup by `product_id`, sum quantities, keep lowest price snapshot
+- Line item: update quantity, remove item — optimistic UI with rollback
+- Cart badge count in header updates instantly
+
+### Checkout (4-step stepper)
+1. Shipping — address form (saved addresses or new)
+2. Payment — mocked (input fields present, no live charge)
+3. Review — order summary before submit
+4. Confirmation — order ID, estimated delivery
+- Payment is mocked behind a `PaymentService` interface (Stripe plug-in documented as future work)
+
+### Account
+- Profile: edit name, email, password
+- Addresses: create, edit, delete, set default
+- Order history: paginated list with status badge
+- Order detail: line items, shipping address, status timeline
+- All account routes are protected
+
+### Admin (optional stretch goal — build after core features)
+- Basic product management: add, edit, delete products
+- Mark as out of stock
+
+## DOCKER & LOCAL DEV
+- MySQL 8 + Adminer run via `docker-compose.yml` at repo root
+- Start DB: `npm run db:up` (from root)
+- Backend reads `DATABASE_URL` from backend/.env
+- Never hardcode DB credentials — always read from env
+
+## AI BLUEPRINT WORKFLOW
+- The graded "engine" lives in ai-blueprint/
+- ai-blueprint/initial.md is the bootstrap prompt for regenerating the entire project
+- ai-blueprint/guidelines/ contains long-form cross-cutting rules
+- ai-blueprint/capabilities/ contains per-domain building blocks
+- This .cursorrules file is a summary of those documents — ai-blueprint/ is the source of truth
+
+## COMMIT STYLE
+feat: add product search with debouncing
+fix: resolve cart merge race condition on login
+chore: add Zod env validation to backend startup
+refactor: extract shared types into shared workspace
+docs: document JWT refresh rotation AI-gap in README
+
+## ENVIRONMENT FILES
+- Always keep .env.example up to date with every new env var
+- Never commit real .env files
+- Backend reads from backend/.env, frontend reads VITE_* vars from frontend/.env
+- Root .env.example documents all vars from all packages
