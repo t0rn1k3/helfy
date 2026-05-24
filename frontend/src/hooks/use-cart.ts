@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { AddToCartInput, UpdateCartItemInput } from '@helfy/shared';
+import type { AddToCartInput, CartWithItems, UpdateCartItemInput } from '@helfy/shared';
 
 import { cartApi } from '@/api/cart.api';
+import { recalculateCart } from '@/lib/cart-utils';
 import { getOrCreateSessionId } from '@/lib/session';
 import { useAuthStore } from '@/store/auth-store';
 import { useCartStore } from '@/store/cart-store';
@@ -64,9 +65,36 @@ export function useUpdateCartItem() {
   const setItemCount = useCartStore((state) => state.setItemCount);
 
   return useMutation({
-    mutationFn: async ({ itemId, quantity }: { itemId: string; quantity: UpdateCartItemInput['quantity'] }) => {
+    mutationFn: async ({
+      itemId,
+      quantity,
+    }: {
+      itemId: string;
+      quantity: UpdateCartItemInput['quantity'];
+    }) => {
       const { data } = await cartApi.updateItem(itemId, { quantity });
       return data.data;
+    },
+    onMutate: async ({ itemId, quantity }) => {
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData<CartWithItems>(queryKey);
+
+      if (previous) {
+        const items = previous.items.map((item) =>
+          item.id === itemId ? { ...item, quantity } : item,
+        );
+        const optimistic = recalculateCart(previous, items);
+        queryClient.setQueryData(queryKey, optimistic);
+        setItemCount(optimistic.itemCount);
+      }
+
+      return { previous };
+    },
+    onError: (_error, _variables, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(queryKey, context.previous);
+        setItemCount(context.previous.itemCount);
+      }
     },
     onSuccess: (cart) => {
       setItemCount(cart.itemCount);
@@ -87,6 +115,25 @@ export function useRemoveCartItem() {
     mutationFn: async (itemId: string) => {
       const { data } = await cartApi.removeItem(itemId);
       return data.data;
+    },
+    onMutate: async (itemId) => {
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData<CartWithItems>(queryKey);
+
+      if (previous) {
+        const items = previous.items.filter((item) => item.id !== itemId);
+        const optimistic = recalculateCart(previous, items);
+        queryClient.setQueryData(queryKey, optimistic);
+        setItemCount(optimistic.itemCount);
+      }
+
+      return { previous };
+    },
+    onError: (_error, _variables, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(queryKey, context.previous);
+        setItemCount(context.previous.itemCount);
+      }
     },
     onSuccess: (cart) => {
       setItemCount(cart.itemCount);

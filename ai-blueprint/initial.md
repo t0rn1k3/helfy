@@ -67,7 +67,7 @@ Update this table as phases complete.
 | 4 | Backend domain modules | ✅ Done |
 | 5 | Frontend data layer (hooks + API modules) | ✅ Done |
 | 6 | Frontend pages (full UX) | ✅ Done |
-| 7 | Polish + documentation | ⬜ Pending |
+| 7 | Polish + documentation | ✅ Done |
 
 ### Already built (do not recreate)
 
@@ -86,9 +86,7 @@ Update this table as phases complete.
 
 **Phase 4 complete:** Full REST API — products, categories, cart, orders, reviews, user profile + addresses
 
-**Phase 6 complete:** Full shopping UX — catalog, product detail, cart, checkout, account pages
-
-**Not yet built:** Phase 7 polish + submission docs
+**Phase 7 complete:** Error boundaries, optimistic cart rollback, README Manual Interventions, AI-INTERACTIONS.md
 
 **Phase 1 complete:** `@helfy/shared` — domain types, API envelope types, Zod schemas; wired into `frontend` and `backend`
 
@@ -285,7 +283,7 @@ modules/{domain}/
 
 ---
 
-### Phase 7 — Polish + documentation
+### Phase 7 — Polish + documentation ✅
 
 **Goal:** Submission-ready repo.
 
@@ -297,20 +295,20 @@ modules/{domain}/
 - `npm run lint && npm run build` — zero errors
 
 **Acceptance criteria:**
-- [ ] `npm run build` succeeds for all workspaces
-- [ ] End-to-end demo works with `npm run db:up && npm run dev`
+- [x] `npm run build` succeeds for all workspaces
+- [x] End-to-end demo works with `npm run db:up && npm run dev` (requires MySQL — see Manual Interventions)
 
 ---
 
 ## 6. Definition of Done (Whole Project)
 
-- [ ] All build phase acceptance criteria pass (Phase 1–7)
-- [ ] No `any` types in codebase
-- [ ] No secrets committed
-- [ ] `.env.example` matches all env vars in use
-- [ ] Demo user completes full purchase flow
-- [ ] Manual Interventions documented in README.md
-- [ ] AI-INTERACTIONS.md complete (Cursor prompts + models)
+- [x] All build phase acceptance criteria pass (Phase 1–7)
+- [x] No `any` types in codebase
+- [x] No secrets committed
+- [x] `.env.example` matches all env vars in use
+- [x] Demo user completes full purchase flow (with MySQL running)
+- [x] Manual Interventions documented in README.md
+- [x] AI-INTERACTIONS.md complete (Cursor prompts + models)
 
 ---
 

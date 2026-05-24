@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { MobileNav } from '@/components/layout/MobileNav';
+import { PageErrorBoundary } from '@/components/layout/PageErrorBoundary';
 import { pageTransition } from '@/lib/motion';
 
 export function AppLayout() {
@@ -23,7 +24,9 @@ export function AppLayout() {
             exit={pageTransition.exit}
             transition={{ duration: 0.25, ease: 'easeOut' }}
           >
-            <Outlet />
+            <PageErrorBoundary>
+              <Outlet />
+            </PageErrorBoundary>
           </motion.div>
         </AnimatePresence>
       </main>
