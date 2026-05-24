@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
+import { MobileNav } from '@/components/layout/MobileNav';
 import { pageTransition } from '@/lib/motion';
 
 export function AppLayout() {
@@ -12,6 +13,7 @@ export function AppLayout() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
+      <MobileNav />
       <main className="flex-1">
         <AnimatePresence mode="wait">
           <motion.div

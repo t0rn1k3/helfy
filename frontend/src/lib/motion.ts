@@ -12,7 +12,7 @@ export const fadeInUp = {
 
 export const scaleOnTap = {
   whileTap: { scale: 0.97 },
-  transition: { type: 'spring', stiffness: 400, damping: 17 },
+  transition: { type: 'spring' as const, stiffness: 400, damping: 17 },
 };
 
 export const staggerContainer = {

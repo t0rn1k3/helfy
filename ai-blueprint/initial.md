@@ -66,7 +66,7 @@ Update this table as phases complete.
 | 3 | Backend auth + middleware | ✅ Done |
 | 4 | Backend domain modules | ✅ Done |
 | 5 | Frontend data layer (hooks + API modules) | ✅ Done |
-| 6 | Frontend pages (full UX) | ⬜ Pending |
+| 6 | Frontend pages (full UX) | ✅ Done |
 | 7 | Polish + documentation | ⬜ Pending |
 
 ### Already built (do not recreate)
@@ -86,9 +86,9 @@ Update this table as phases complete.
 
 **Phase 4 complete:** Full REST API — products, categories, cart, orders, reviews, user profile + addresses
 
-**Phase 5 complete:** Frontend API modules, TanStack Query hooks, auth/cart wiring, global error toasts
+**Phase 6 complete:** Full shopping UX — catalog, product detail, cart, checkout, account pages
 
-**Not yet built:** Full page UX (Phase 6+)
+**Not yet built:** Phase 7 polish + submission docs
 
 **Phase 1 complete:** `@helfy/shared` — domain types, API envelope types, Zod schemas; wired into `frontend` and `backend`
 
@@ -264,7 +264,7 @@ modules/{domain}/
 
 ---
 
-### Phase 6 — Frontend pages (full UX)
+### Phase 6 — Frontend pages (full UX) ✅
 
 **Goal:** Complete premium shopping experience.
 
@@ -279,9 +279,9 @@ modules/{domain}/
 | `/account/*` | Profile, addresses, orders, order detail |
 
 **Acceptance criteria:**
-- [ ] Full journey: browse → cart → checkout → order history
-- [ ] Guest cart merges on login
-- [ ] Filters persist in URL
+- [x] Full journey: browse → cart → checkout → order history
+- [x] Guest cart merges on login
+- [x] Filters persist in URL
 
 ---
 

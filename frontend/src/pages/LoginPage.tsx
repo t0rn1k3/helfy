@@ -7,14 +7,9 @@ import type { LoginInput } from '@helfy/shared';
 import { PageShell } from '@/components/layout/PageShell';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useLogin } from '@/hooks/use-auth';
-import { cn } from '@/lib/utils';
-
-const inputClassName = cn(
-  'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm',
-  'ring-offset-background placeholder:text-muted-foreground',
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-);
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -52,30 +47,19 @@ export function LoginPage() {
             })}
           >
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                autoComplete="email"
-                className={inputClassName}
-                {...register('email')}
-              />
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" autoComplete="email" {...register('email')} />
               {errors.email ? (
                 <p className="text-sm text-destructive">{errors.email.message}</p>
               ) : null}
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium">
-                Password
-              </label>
-              <input
+              <Label htmlFor="password">Password</Label>
+              <Input
                 id="password"
                 type="password"
                 autoComplete="current-password"
-                className={inputClassName}
                 {...register('password')}
               />
               {errors.password ? (
