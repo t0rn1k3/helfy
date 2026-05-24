@@ -4,6 +4,8 @@ import { Menu, ShoppingBag, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Container } from '@/components/layout/Container';
+import { useCart } from '@/hooks/use-cart';
+import { useLogout } from '@/hooks/use-auth';
 import { useAuthStore } from '@/store/auth-store';
 import { useCartStore } from '@/store/cart-store';
 import { useUiStore } from '@/store/ui-store';
@@ -18,6 +20,9 @@ export function Header() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const itemCount = useCartStore((s) => s.itemCount);
   const toggleMobileNav = useUiStore((s) => s.toggleMobileNav);
+  const logout = useLogout();
+
+  useCart();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md">
@@ -58,12 +63,22 @@ export function Header() {
             </Button>
 
             {isAuthenticated ? (
-              <Button variant="outline" size="sm" asChild>
-                <Link to="/account">
-                  <User className="size-4" />
-                  Account
-                </Link>
-              </Button>
+              <>
+                <Button variant="outline" size="sm" asChild>
+                  <Link to="/account">
+                    <User className="size-4" />
+                    Account
+                  </Link>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => logout.mutate()}
+                  disabled={logout.isPending}
+                >
+                  Sign out
+                </Button>
+              </>
             ) : (
               <Button size="sm" asChild>
                 <Link to="/login">Sign in</Link>

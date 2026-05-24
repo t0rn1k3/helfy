@@ -65,7 +65,7 @@ Update this table as phases complete.
 | **1** | **Shared workspace (`@helfy/shared`)** | ✅ Done |
 | 3 | Backend auth + middleware | ✅ Done |
 | 4 | Backend domain modules | ✅ Done |
-| 5 | Frontend data layer (hooks + API modules) | ⬜ Pending |
+| 5 | Frontend data layer (hooks + API modules) | ✅ Done |
 | 6 | Frontend pages (full UX) | ⬜ Pending |
 | 7 | Polish + documentation | ⬜ Pending |
 
@@ -86,7 +86,9 @@ Update this table as phases complete.
 
 **Phase 4 complete:** Full REST API — products, categories, cart, orders, reviews, user profile + addresses
 
-**Not yet built:** Frontend API integration (Phase 5+)
+**Phase 5 complete:** Frontend API modules, TanStack Query hooks, auth/cart wiring, global error toasts
+
+**Not yet built:** Full page UX (Phase 6+)
 
 **Phase 1 complete:** `@helfy/shared` — domain types, API envelope types, Zod schemas; wired into `frontend` and `backend`
 
@@ -246,7 +248,7 @@ modules/{domain}/
 
 ---
 
-### Phase 5 — Frontend data layer
+### Phase 5 — Frontend data layer ✅
 
 **Goal:** Connect frontend to backend API.
 
@@ -257,8 +259,8 @@ modules/{domain}/
 - Toast on API errors via Sonner
 
 **Acceptance criteria:**
-- [ ] Login stores access token; protected routes redirect when logged out
-- [ ] API errors show toast, not uncaught rejections
+- [x] Login stores access token; protected routes redirect when logged out
+- [x] API errors show toast, not uncaught rejections
 
 ---
 
