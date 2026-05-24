@@ -12,12 +12,26 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@helfy/shared": "*",
     "argon2": "^0.43.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
     "dotenv": "^16.6.1",
     "drizzle-orm": "^0.44.4",
-    "mysql2": "^3.14.3"
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.2.0",
+    "jsonwebtoken": "^9.0.3",
+    "mysql2": "^3.14.3",
+    "pino": "^10.3.1",
+    "pino-http": "^11.0.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.2.0",
     "drizzle-kit": "^0.31.4",
     "tsx": "^4.20.3",

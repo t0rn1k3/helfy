@@ -1,18 +1,12 @@
+import type { User } from '@helfy/shared';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export interface AuthUser {
-  id: string;
-  email: string;
-  name: string;
-  role: 'customer' | 'admin';
-}
-
 interface AuthState {
-  user: AuthUser | null;
+  user: User | null;
   accessToken: string | null;
   isAuthenticated: boolean;
-  setAuth: (user: AuthUser, accessToken: string) => void;
+  setAuth: (user: User, accessToken: string) => void;
   setAccessToken: (accessToken: string) => void;
   clearAuth: () => void;
 }

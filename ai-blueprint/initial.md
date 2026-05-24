@@ -62,8 +62,8 @@ Update this table as phases complete.
 | 1c | `engineering-guidelines/` (01–06) | ✅ Done |
 | 1d | `capabilities/` (7 domain files) | ✅ Done |
 | **2** | **Database schema + migrations + seeds** | ✅ Done |
-| **1** | **Shared workspace (`@helfy/shared`)** | ⬜ Pending |
-| 3 | Backend auth + middleware | ⬜ Pending |
+| **1** | **Shared workspace (`@helfy/shared`)** | ✅ Done |
+| 3 | Backend auth + middleware | ✅ Done |
 | 4 | Backend domain modules | ⬜ Pending |
 | 5 | Frontend data layer (hooks + API modules) | ⬜ Pending |
 | 6 | Frontend pages (full UX) | ⬜ Pending |
@@ -82,7 +82,11 @@ Update this table as phases complete.
 - TanStack Query + Sonner providers in `AppProviders.tsx`
 - Framer Motion page transitions in `AppLayout`
 
-**Not yet built:** `shared/` (empty), Express API modules (Phase 3+)
+**Phase 3 complete:** Express server, JWT auth (register/login/refresh/logout/logout-all), middleware stack, `GET /me` protected route
+
+**Not yet built:** Domain REST modules (Phase 4+)
+
+**Phase 1 complete:** `@helfy/shared` — domain types, API envelope types, Zod schemas; wired into `frontend` and `backend`
 
 **Phase 2 complete:** Drizzle schema (11 tables), migrations, seeds, backend/db tooling
 
@@ -113,8 +117,8 @@ helfy-assignment/
 │       └── api-contracts.md
 ├── .cursorrules                            ← Cursor hard rules
 ├── frontend/                               ← React + Vite (✅ scaffolded)
-├── backend/                                ← Express API (⬜ empty)
-├── shared/                                 ← @helfy/shared (⬜ empty)
+├── backend/                                ← Express API (⬜ Phase 3+)
+├── shared/                                 ← @helfy/shared (✅ types + schemas)
 ├── database/
 │   ├── migrations/
 │   └── seeds/
@@ -146,7 +150,7 @@ Verified:
 
 ---
 
-### Phase 1 — Shared workspace + env wiring ⬜ NEXT
+### Phase 1 — Shared workspace + env wiring ✅
 
 **Goal:** End-to-end type safety foundation.
 
@@ -162,9 +166,9 @@ Verified:
 - Configure TypeScript project references or workspace imports
 
 **Acceptance criteria:**
-- [ ] `npm run build -w shared` succeeds
-- [ ] Frontend imports `{ Product, loginSchema } from '@helfy/shared'` without duplication
-- [ ] Backend can import the same types (once backend exists)
+- [x] `npm run build -w shared` succeeds
+- [x] Frontend imports `{ Product, loginSchema } from '@helfy/shared'` without duplication
+- [x] Backend can import the same types (once backend exists)
 
 ---
 
@@ -189,7 +193,7 @@ Verified:
 
 ---
 
-### Phase 3 — Backend auth + global middleware
+### Phase 3 — Backend auth + global middleware ✅
 
 **Goal:** Secure auth layer with JWT refresh rotation.
 
@@ -202,9 +206,9 @@ Verified:
 - Access token in JSON body; refresh token in httpOnly cookie
 
 **Acceptance criteria:**
-- [ ] Register → login → protected route → refresh → logout works via curl/Postman
-- [ ] Invalid refresh token returns 401
-- [ ] Auth routes rate-limited to 10 req / 15 min
+- [x] Register → login → protected route → refresh → logout works via curl/Postman (requires DB running)
+- [x] Invalid refresh token returns 401
+- [x] Auth routes rate-limited to 10 req / 15 min
 
 **Known AI-Gap:** Refresh rotation race on parallel tabs — use token family invalidation; log hand-fix in README.
 
