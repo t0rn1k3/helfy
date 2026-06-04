@@ -1,6 +1,5 @@
-import { Outlet } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useLocation } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
@@ -16,19 +15,30 @@ export function AppLayout() {
       <Header />
       <MobileNav />
       <main className="flex-1">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={location.pathname}
-            initial={pageTransition.initial}
-            animate={pageTransition.animate}
-            exit={pageTransition.exit}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
-          >
-            <PageErrorBoundary>
-              <Outlet />
-            </PageErrorBoundary>
-          </motion.div>
-        </AnimatePresence>
+        {/*
+         * AnimatePresence is intentionally omitted here.
+         *
+         * React Router v7 updates the route context synchronously on navigation.
+         * When AnimatePresence mode="wait" keeps the exiting motion.div alive for its
+         * exit animation, the <Outlet /> inside has already updated to the NEW page —
+         * because the router context changed in the same render cycle. This causes the
+         * new page to fade OUT (exit on the stale div) then fade back IN (enter on the
+         * new div): the "page renders twice" visual the user observes.
+         *
+         * Without AnimatePresence (and the exit prop), the old div unmounts immediately
+         * on navigation; the new div mounts fresh with initial → animate, producing a
+         * clean enter transition with zero double-render artifact in both dev and prod.
+         */}
+        <motion.div
+          key={location.pathname}
+          initial={pageTransition.initial}
+          animate={pageTransition.animate}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
+        >
+          <PageErrorBoundary>
+            <Outlet />
+          </PageErrorBoundary>
+        </motion.div>
       </main>
       <Footer />
     </div>
